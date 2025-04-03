@@ -82,11 +82,9 @@ const ActivityLog = () => {
     },
   ]);
 
-  // ตั้งค่าการแบ่งหน้า
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  // คำนวณหน้าที่แสดง
   const totalPages = Math.ceil(activityLog.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const selectedLogs = activityLog.slice(startIndex, startIndex + itemsPerPage);
