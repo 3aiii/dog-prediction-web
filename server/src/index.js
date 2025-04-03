@@ -2,10 +2,12 @@ const express = require("express");
 const cors = require("cors");
 const connector = require("./server/connector");
 const rootRouter = require("./routes/index");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 require("dotenv").config();
 
+app.use(cookieParser());
 app.use(express.json());
 app.use(
   cors({

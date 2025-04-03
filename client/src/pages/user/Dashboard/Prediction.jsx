@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
-import { IoCloudUploadOutline } from "react-icons/io5";
 
 const Prediction = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -31,7 +30,7 @@ const Prediction = () => {
   };
 
   return (
-    <div className="flex items-center justify-center w-full">
+    <div className="flex items-center justify-center">
       <div className="flex justify-center p-6">
         <div className="bg-white p-6 rounded-lg shadow-lg w-full text-center">
           <div className="flex items-center mb-4">
