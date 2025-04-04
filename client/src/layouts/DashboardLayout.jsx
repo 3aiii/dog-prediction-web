@@ -9,7 +9,7 @@ const DashboardLayout = () => {
   useEffect(() => {
     const Verify = async () => {
       const { data } = await verify();
-
+      
       if (data.role === "ADMIN") {
         navigate("/admin/user", { state: { role: data?.role } });
       } else if (data.role === "USER") {

@@ -29,7 +29,7 @@ function App() {
           <Route path="/edit/profile/:id" element={<Profile />} />
           <Route path="/predict" element={<Prediction />} />
           <Route path="/dog-breed" element={<DogBreed />} />
-          <Route path="/admin/dashboard" element={<DashboardAdminIndex />} />
+          {/* <Route path="/admin/dashboard" element={<DashboardAdminIndex />} /> */}
           <Route path="/admin/user" element={<AdminIndex />} />
           <Route path="/admin/user/edit/:id" element={<EditUser />} />
           <Route path="/admin/user/create" element={<CreateUser />} />

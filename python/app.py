@@ -18,6 +18,19 @@ MODEL_PATHS = {
 class_names = ['beagle', 'golden_retriever', 'Rottweiler', 'German_shepherd', 'French_bulldog', 
                'Siberian_husky', 'pug', 'Samoyed', 'Pomeranian', 'standard_poodle']
 
+breed_id_map = {
+    'beagle': 1,
+    'golden_retriever': 2,
+    'Rottweiler': 3,
+    'German_shepherd': 4,
+    'French_bulldog': 5,
+    'Siberian_husky': 6,
+    'pug': 7,
+    'Samoyed': 8,
+    'Pomeranian': 9,
+    'standard_poodle': 10
+}
+
 # Function to load the selected model
 def load_model(model_name):
     if model_name not in MODEL_PATHS:
@@ -70,13 +83,22 @@ def upload_image():
 
     # Predict breed
     breed, confidence = predict_breed(img_path, model)
+    # breedId  
+
+    if breed in breed_id_map:
+        breed_name = breed.replace('_', ' ').capitalize()
+        breed_id = breed_id_map[breed]
+    else:
+        breed_name = 'ไม่ทราบสายพันธุ์'
+        breed_id = None    
 
     # Return the result
     return jsonify({
-        'breed': breed,
+        'breed': breed_name,
+        'breedId': breed_id,
         'model': model_name,
-        'confidence': f'{confidence:.2f}%',
-        'image_path': img_path
+        'confidence': f'{confidence:.2f}',
+        'image_path': new_filename
     })
 
 if __name__ == '__main__':

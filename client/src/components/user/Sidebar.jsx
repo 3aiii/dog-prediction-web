@@ -56,7 +56,6 @@ const Sidebar = () => {
   useEffect(() => {
     const Verify = async () => {
       const { data } = await verify();
-
       setRole(data?.role);
       setId(data?.user_id);
 
@@ -65,6 +64,8 @@ const Sidebar = () => {
         navigate("/admin/user");
       } else if (data.role === "USER" && currentPath !== "/dog-breed") {
         navigate("/dog-breed");
+      } else if (data.error === "Unauthorized") {
+        navigate("/login");
       }
     };
     Verify();

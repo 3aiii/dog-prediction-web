@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import { predict } from "../../../composables/dogService";
+import { verify } from "../../../composables/userService";
 
 const Prediction = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [model, setModel] = useState("cnn");
-  const [prediction, setPrediction] = useState(null);
-
+  const [model, setModel] = useState("cnnmodel");
+  const [prediction, setPrediction] = useState([]);
+  const [userId, setUserId] = useState(null);
+  
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -15,19 +18,51 @@ const Prediction = () => {
     }
   };
 
-  const handlePredict = () => {
+  const handlePredict = async () => {
     if (!selectedFile) {
       Swal.fire({
         icon: "warning",
         title: "กรุณาเลือกไฟล์ภาพก่อน",
-        text: "คุณยังไม่ได้เลือกไฟล์ภาพใด ๆ",
-        timer: 1000,
+        text: "คุณยังไม่ได้เลือกไฟล์ภาพ",
+        timer: 2000,
         timerProgressBar: true,
       });
       return;
     }
-    setPrediction("Labrador Retriever (จำลอง)");
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+
+    try {
+      const response = await predict(userId, model, formData);
+
+      if (response.status === 200) {
+        setPrediction(response.data.prediction || "ไม่ทราบสายพันธุ์");
+        Swal.fire({
+          icon: "success",
+          title: "สำเร็จ!",
+          text: "ทำนายสายพันธุ์สำเร็จ",
+          timer: 1500,
+          timerProgressBar: true,
+        });
+      }
+    } catch (error) {
+      console.error("Prediction error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "เกิดข้อผิดพลาด",
+        text: "ไม่สามารถทำนายสายพันธุ์ได้",
+      });
+    }
   };
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data } = await verify();
+      setUserId(data?.user_id);
+    };
+    fetchUser();
+  }, []);
 
   return (
     <div className="flex items-center justify-center">
@@ -61,9 +96,9 @@ const Prediction = () => {
             value={model}
             onChange={(e) => setModel(e.target.value)}
           >
-            <option value="cnn">CNN</option>
-            <option value="inception">Inception</option>
-            <option value="xception">Xception</option>
+            <option value="cnnmodel">CNN</option>
+            <option value="inceptionmodel">Inception</option>
+            <option value="xceptionmodel">Xception</option>
           </select>
 
           <label
@@ -93,14 +128,17 @@ const Prediction = () => {
             </button>
           </div>
 
-          {prediction && (
+          {prediction.length !== 0 && (
             <div className="mt-4 p-4 bg-green-100 border border-green-400 rounded">
               <h3 className="text-2xl font-bold">ผลการทำนาย:</h3>
               <p>
                 <strong>โมเดลที่เลือก:</strong> {model.toUpperCase()}
               </p>
               <p>
-                <strong>สายพันธุ์ที่คาดว่า:</strong> {prediction}
+                <strong>สายพันธุ์ที่คาดว่า:</strong> {prediction?.breed}
+              </p>
+              <p>
+                <strong>ความน่าจะเป็น:</strong> {prediction?.confidence} %
               </p>
             </div>
           )}

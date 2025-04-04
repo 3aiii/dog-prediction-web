@@ -17,9 +17,4 @@ module.exports = {
       return res.status(500).send({ error: "Internal server error" });
     }
   },
-  top5: (req, res) => {
-    return res.status(200).send({
-      message: "Dog route",
-    });
-  },
 };

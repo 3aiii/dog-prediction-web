@@ -46,28 +46,28 @@ const Profile = () => {
     }
   };
   
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const { data } = await get(`user/${id}`);
-        setFormData({
-          fname: data?.fname || "",
-          lname: data?.lname || "",
-          email: data?.email || "",
-          password: "",
-        });
-      } catch (error) {
-        Swal.fire({
-          title: "เกิดข้อผิดพลาด",
-          text: "ไม่สามารถโหลดข้อมูลผู้ใช้ได้",
-          icon: "error",
-          timer: 2000,
-          showConfirmButton: false,
-          timerProgressBar: true,
-        });
-      }
-    };
+  const fetchUser = async () => {
+    try {
+      const { data } = await get(`user/${id}`);
+      setFormData({
+        fname: data?.fname || "",
+        lname: data?.lname || "",
+        email: data?.email || "",
+        password: "",
+      });
+    } catch (error) {
+      Swal.fire({
+        title: "เกิดข้อผิดพลาด",
+        text: "ไม่สามารถโหลดข้อมูลผู้ใช้ได้",
+        icon: "error",
+        timer: 2000,
+        showConfirmButton: false,
+        timerProgressBar: true,
+      });
+    }
+  };
 
+  useEffect(() => {
     fetchUser();
   }, [id]);
 
@@ -139,7 +139,7 @@ const Profile = () => {
             <div className="flex justify-end gap-2">
               <button
                 type="button"
-                onClick={() => navigate("/dashboard")}
+                onClick={() => fetchUser()}
                 className="bg-gray-500 hover:bg-gray-600 transition px-3 py-2 rounded-md text-white"
               >
                 ยกเลิก
