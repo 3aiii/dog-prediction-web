@@ -9,6 +9,7 @@ const Prediction = () => {
   const [model, setModel] = useState("cnnmodel");
   const [prediction, setPrediction] = useState([]);
   const [userId, setUserId] = useState(null);
+  const [loading, setLoading] = useState(false);
   
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -34,25 +35,17 @@ const Prediction = () => {
     formData.append("file", selectedFile);
 
     try {
+      setLoading(true);
       const response = await predict(userId, model, formData);
-
-      if (response.status === 200) {
-        setPrediction(response.data.prediction || "ไม่ทราบสายพันธุ์");
-        Swal.fire({
-          icon: "success",
-          title: "สำเร็จ!",
-          text: "ทำนายสายพันธุ์สำเร็จ",
-          timer: 1500,
-          timerProgressBar: true,
-        });
-      }
+      setPrediction(response.data.prediction || "ไม่ทราบสายพันธุ์");
     } catch (error) {
-      console.error("Prediction error:", error);
       Swal.fire({
         icon: "error",
         title: "เกิดข้อผิดพลาด",
         text: "ไม่สามารถทำนายสายพันธุ์ได้",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -76,7 +69,7 @@ const Prediction = () => {
             <div className="w-[50px] h-[3px] bg-[#2f3542]"></div>
           </div>
 
-          {preview ? (
+          {preview && (
             <div className="flex items-center justify-center">
               <img
                 src={preview}
@@ -84,8 +77,6 @@ const Prediction = () => {
                 className="w-full h-[250px] object-cover mt-3 rounded-lg mb-4"
               />
             </div>
-          ) : (
-            <></>
           )}
 
           <label className="block text-left font-semibold mb-2">
@@ -113,33 +104,67 @@ const Prediction = () => {
               className="hidden"
             />
           </label>
+
           <div className="flex gap-2 justify-end">
             <button
-              onClick={() => setPreview(null)}
-              className="bg-gray-500 px-3 py-2 text-white rounded-md"
+              onClick={() => {
+                setPreview(null);
+                setSelectedFile(null);
+                setPrediction([]);
+              }}
+              className="bg-gray-500 hover:bg-gray-600 px-3 py-2 text-white rounded-md transition"
+              disabled={loading}
             >
               ยกเลิก
             </button>
             <button
               onClick={handlePredict}
-              className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+              className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition"
+              disabled={loading}
             >
-              ทำนาย
+              {loading ? "กำลังทำนาย..." : "ทำนาย"}
             </button>
           </div>
 
-          {prediction.length !== 0 && (
+          {/* Loading spinner */}
+          {loading && (
+            <div className="flex flex-col items-center justify-center mt-4">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-solid mb-2"></div>
+              <p className="text-blue-600 font-medium">กำลังประมวลผลภาพ...</p>
+            </div>
+          )}
+
+          {prediction.length !== 0 && !loading && (
             <div className="mt-4 p-4 bg-green-100 border border-green-400 rounded">
               <h3 className="text-2xl font-bold">ผลการทำนาย:</h3>
               <p>
-                <strong>โมเดลที่เลือก:</strong> {model.toUpperCase()}
+                <strong>โมเดลที่เลือก:</strong>{" "}
+                {prediction?.model?.toUpperCase()}
               </p>
               <p>
                 <strong>สายพันธุ์ที่คาดว่า:</strong> {prediction?.breed}
               </p>
-              <p>
-                <strong>ความน่าจะเป็น:</strong> {prediction?.confidence} %
-              </p>
+              {prediction?.breedDetail && (
+                <>
+                  <p>
+                    <strong>ลักษณะ:</strong> {prediction?.breedDetail?.nature}
+                  </p>
+                  <p>
+                    <strong>นิสัย:</strong> {prediction?.breedDetail?.habits}
+                  </p>
+                  <p>
+                    <strong>การดูแล:</strong>{" "}
+                    {prediction?.breedDetail?.husbandry}
+                  </p>
+                  <p>
+                    <strong>ถิ่นกำเนิด:</strong>{" "}
+                    {prediction?.breedDetail?.origin}
+                  </p>
+                  <p>
+                    <strong>ความน่าจะเป็น:</strong> {prediction?.confidence} %
+                  </p>
+                </>
+              )}
             </div>
           )}
         </div>

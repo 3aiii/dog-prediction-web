@@ -3,12 +3,14 @@ const cors = require("cors");
 const connector = require("./server/connector");
 const rootRouter = require("./routes/index");
 const cookieParser = require("cookie-parser");
+const path = require("path");
 
 const app = express();
 require("dotenv").config();
 
 app.use(cookieParser());
 app.use(express.json());
+app.use("/image", express.static(path.join(__dirname, "uploads")));
 app.use(
   cors({
     origin: "http://localhost:5173",

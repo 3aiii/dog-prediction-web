@@ -79,6 +79,7 @@ const Index = () => {
                 <th className="border p-2 w-16">ID</th>
                 <th className="border p-2">ชื่อ-นามสกุล</th>
                 <th className="border p-2">อีเมล</th>
+                <th className="border p-2 w-28">บทบาท</th>
                 <th className="border p-2 w-48"></th>
               </tr>
             </thead>
@@ -90,6 +91,15 @@ const Index = () => {
                     {user.fname} {user.lname}
                   </td>
                   <td className="border p-2">{user.email}</td>
+                  <td className="border p-2">
+                    <span
+                      className={` rounded-md px-2 py-1 text-sm text-white ${
+                        user.role === `USER` ? `bg-green-500` : `bg-red-500`
+                      }`}
+                    >
+                      {user.role}
+                    </span>{" "}
+                  </td>
                   <td className="border p-2">
                     <Link
                       to={`/admin/user/edit/${user.user_id}`}

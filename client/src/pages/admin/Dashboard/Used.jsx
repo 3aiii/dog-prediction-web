@@ -1,116 +1,58 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Pagination from "../../../components/Pagination";
+import { history } from "../../../composables/dogService";
+import { formatThaiDate } from "../../../utils/formatDate";
+import { Link } from "react-router-dom";
 
 const ActivityLog = () => {
-  const [activityLog, setActivityLog] = useState([
-    {
-      id: 1,
-      user: "John Doe",
-      action: "เปลี่ยนชื่อ",
-      details: "เปลี่ยนเป็น 'JohnDoe'",
-      timestamp: "2025-04-01 14:30",
-    },
-    {
-      id: 2,
-      user: "Jane Smith",
-      action: "ลบโพสต์",
-      details: "ลบโพสต์ 'วิธีใช้ระบบ'",
-      timestamp: "2025-04-02 09:15",
-    },
-    {
-      id: 3,
-      user: "Michael Johnson",
-      action: "อัปเดตรหัสผ่าน",
-      details: "รหัสผ่านใหม่",
-      timestamp: "2025-04-01 18:45",
-    },
-    {
-      id: 4,
-      user: "Alice Brown",
-      action: "เพิ่มผู้ใช้",
-      details: "เพิ่ม 'Tom Holland'",
-      timestamp: "2025-04-02 12:00",
-    },
-    {
-      id: 5,
-      user: "Bob White",
-      action: "แก้ไขบทความ",
-      details: "อัปเดต 'ข่าวฟุตบอล'",
-      timestamp: "2025-04-03 15:30",
-    },
-    {
-      id: 6,
-      user: "Chris Green",
-      action: "เพิ่มหมวดหมู่",
-      details: "เพิ่ม 'บทวิเคราะห์'",
-      timestamp: "2025-04-03 16:45",
-    },
-    {
-      id: 7,
-      user: "Chris Green",
-      action: "เพิ่มหมวดหมู่",
-      details: "เพิ่ม 'บทวิเคราะห์'",
-      timestamp: "2025-04-03 16:45",
-    },
-    {
-      id: 8,
-      user: "Chris Green",
-      action: "เพิ่มหมวดหมู่",
-      details: "เพิ่ม 'บทวิเคราะห์'",
-      timestamp: "2025-04-03 16:45",
-    },
-    {
-      id: 9,
-      user: "Chris Green",
-      action: "เพิ่มหมวดหมู่",
-      details: "เพิ่ม 'บทวิเคราะห์'",
-      timestamp: "2025-04-03 16:45",
-    },
-    {
-      id: 10,
-      user: "Chris Green",
-      action: "เพิ่มหมวดหมู่",
-      details: "เพิ่ม 'บทวิเคราะห์'",
-      timestamp: "2025-04-03 16:45",
-    },
-    {
-      id: 11,
-      user: "Chris Green",
-      action: "เพิ่มหมวดหมู่",
-      details: "เพิ่ม 'บทวิเคราะห์'",
-      timestamp: "2025-04-03 16:45",
-    },
-  ]);
-
+  const [historys, setHistorys] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-
-  const totalPages = Math.ceil(activityLog.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const selectedLogs = activityLog.slice(startIndex, startIndex + itemsPerPage);
 
+  useEffect(() => {
+    const fetchHistory = async () => {
+      const { data } = await history(currentPage, itemsPerPage);
+      setHistorys(data);
+    };
+    fetchHistory();
+  }, [currentPage]);
   return (
     <div className="flex justify-center">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full text-center">
-        <h1 className="text-2xl text-left font-bold mb-4">ประวัติการดำเนินการ</h1>
+        <h1 className="text-2xl text-left font-bold mb-4">
+          ประวัติการดำเนินการ
+        </h1>
         <table className="w-full border-collapse border border-gray-300">
           <thead>
             <tr className="bg-gray-100">
               <th className="border p-2">ID</th>
               <th className="border p-2">ผู้ใช้งาน</th>
-              <th className="border p-2">การกระทำ</th>
-              <th className="border p-2">รายละเอียด</th>
-              <th className="border p-2">เวลา</th>
+              <th className="border p-2">ใช้โมเดล</th>
+              <th className="border p-2">เปอร์เซ็น (%)</th>
+              <th className="border p-2">วันเวลาที่ใช้งาน</th>
+              <th className="border p-2 w-48"></th>
             </tr>
           </thead>
           <tbody>
-            {selectedLogs.map((log, index) => (
-              <tr key={log.id} className="border">
+            {historys?.history?.map((his, index) => (
+              <tr key={index} className="border">
                 <td className="border p-2">{startIndex + index + 1}</td>
-                <td className="border p-2">{log.user}</td>
-                <td className="border p-2">{log.action}</td>
-                <td className="border p-2">{log.details}</td>
-                <td className="border p-2">{log.timestamp}</td>
+                <td className="border p-2">{his.userDetail.email}</td>
+                <td className="border p-2">
+                  {his.model_used.replace("model", "")}
+                </td>
+                <td className="border p-2">{his.percentage} </td>
+
+                <td className="border p-2">{formatThaiDate(his.createdAt)}</td>
+                <td className="border p-2">
+                  <Link
+                    to={`/admin/used/${his.prediction_id}`}
+                    className="bg-blue-500 transition hover:bg-blue-600 text-white px-2 py-1 rounded mr-2"
+                  >
+                    ดูเพิ่มเติม
+                  </Link>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -118,7 +60,7 @@ const ActivityLog = () => {
 
         <Pagination
           currentPage={currentPage}
-          totalPages={totalPages}
+          totalPages={historys?.pagination?.totalPages}
           onPageChange={setCurrentPage}
         />
       </div>

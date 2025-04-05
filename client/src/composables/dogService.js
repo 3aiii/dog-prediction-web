@@ -14,3 +14,15 @@ export const predict = async (id, model, data) => {
     withCredentials: true,
   });
 };
+
+export const top5 = async () => {
+  return await get(`predict/top-5`);
+};
+
+export const history = async (currentPage, itemsPerPage) => {
+  return await get(`predict/history?page=${currentPage}&limit=${itemsPerPage}`);
+};
+
+export const getHistory = async (id) => {
+  return await get(`predict/${id}`);
+};

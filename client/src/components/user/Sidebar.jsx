@@ -93,9 +93,13 @@ const Sidebar = () => {
             </Link>
             <Link
               to="/admin/used"
-              className={`block px-4 py-2 rounded-lg text-gray-300 hover:bg-gray-700 hover:translate-x-1 transition ${isActive(
-                "/admin/used"
-              )}`}
+              className={`block px-4 py-2 rounded-lg text-gray-300 hover:bg-gray-700 hover:translate-x-1 
+                  transition ${
+                    isActive("/admin/used") ||
+                    matchPath("/admin/used/:id", location.pathname)
+                      ? `bg-gray-700`
+                      : ``
+                  } `}
             >
               ข้อมูลการใช้งานระบบของผู้ใช้
             </Link>
