@@ -14,10 +14,9 @@ module.exports = {
       if (err) {
         return res.status(400).json({ error: "Error uploading file" });
       }
-
+      
       const userId = req.params.id;
       const modelName = req.query.model || "cnnmodel";
-
       const formData = new FormData();
       formData.append("file", req.file.buffer, req.file.originalname);
 
@@ -83,9 +82,10 @@ module.exports = {
           );
         }
       } catch (error) {
-        console.error("Error communicating with Flask:", error);
+        // console.error("Error communicating with Flask:", error);
         return res.status(500).send({
-          error: "Something went wrong while communicating with Flask",
+          messge: "Something went wrong while communicating with Flask",
+          error
         });
       }
     });

@@ -39,6 +39,7 @@ const Prediction = () => {
       const response = await predict(userId, model, formData);
       setPrediction(response.data.prediction || "ไม่ทราบสายพันธุ์");
     } catch (error) {
+      console.log(error)
       Swal.fire({
         icon: "error",
         title: "เกิดข้อผิดพลาด",

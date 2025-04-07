@@ -62,10 +62,10 @@ def upload_image():
         model = load_model(model_name)
     except ValueError as e:
         return jsonify({'error': str(e)}), 400
-
     if 'file' not in request.files:
         return jsonify({'error': 'No file part'}), 400
     file = request.files['file']
+    print(file)
     
     if file.filename == '':
         return jsonify({'error': 'No selected file'}), 400
@@ -102,4 +102,4 @@ def upload_image():
     })
 
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=True, host="0.0.0.0",port=8000)
