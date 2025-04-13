@@ -26,3 +26,7 @@ export const history = async (currentPage, itemsPerPage) => {
 export const getHistory = async (id) => {
   return await get(`predict/${id}`);
 };
+
+export const getHistoryByUserId = async (id) => {
+  return await get(`predict/getByUserId/${id}`);
+};

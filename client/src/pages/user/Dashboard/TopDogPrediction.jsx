@@ -12,7 +12,7 @@ import { top5 } from "../../../composables/dogService";
 
 const TopDogPrediction = () => {
   const [breeds, setBreeds] = useState([]);
-  
+
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await top5();
@@ -63,27 +63,27 @@ const TopDogPrediction = () => {
               <span className="rounded-full bg-blue-500 w-8 h-8 flex items-center justify-center text-white font-bold mr-2">
                 {index + 1}
               </span>
-              {breed.breedDetail.name}
+              {breed?.breedDetail?.name}
             </h3>
             <img
-              src={breed.breedDetail.image}
-              alt={breed.breedDetail.name}
+              src={breed?.breedDetail?.image}
+              alt={breed?.breedDetail?.name}
               className="w-full h-48 object-cover rounded-lg mb-4"
             />
             <p>
               <strong>จำนวนครั้งที่ถูกทำนาย:</strong> {breed.count} ครั้ง
             </p>
             <p>
-              <strong>ลักษณะ:</strong> {breed.breedDetail.nature}
+              <strong>ลักษณะ:</strong> {breed?.breedDetail?.nature}
             </p>
             <p>
-              <strong>นิสัย:</strong> {breed.breedDetail.habits}
+              <strong>นิสัย:</strong> {breed?.breedDetail?.habits}
             </p>
             <p>
-              <strong>การดูแล:</strong> {breed.breedDetail.husbandry}
+              <strong>การดูแล:</strong> {breed?.breedDetail?.husbandry}
             </p>
             <p>
-              <strong>ถิ่นกำเนิด:</strong> {breed.breedDetail.origin}
+              <strong>ถิ่นกำเนิด:</strong> {breed?.breedDetail?.origin}
             </p>
           </div>
         ))}

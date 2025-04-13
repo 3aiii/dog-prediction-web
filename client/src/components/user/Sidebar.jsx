@@ -72,8 +72,8 @@ const Sidebar = () => {
   }, []);
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      <div className="w-[300px] h-full bg-[#1e272e] text-white p-4">
+    <div className=" flex min-h-screen bg-[#1e272e]">
+      <div className="sticky top-0 self-start w-[300px] h-screen bg-[#1e272e] text-white p-4 shadow-xl rounded-tr-3xl rounded-br-3xl transition-all duration-300">
         <h2 className="text-xl font-semibold border-b border-white/20 pb-2 mt-6 mb-4">
           เมนูผู้ใช้งาน
         </h2>

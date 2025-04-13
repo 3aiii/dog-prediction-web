@@ -14,7 +14,7 @@ module.exports = {
       if (err) {
         return res.status(400).json({ error: "Error uploading file" });
       }
-      
+
       const userId = req.params.id;
       const modelName = req.query.model || "cnnmodel";
       const formData = new FormData();
@@ -85,7 +85,7 @@ module.exports = {
         // console.error("Error communicating with Flask:", error);
         return res.status(500).send({
           messge: "Something went wrong while communicating with Flask",
-          error
+          error,
         });
       }
     });
@@ -93,7 +93,7 @@ module.exports = {
   top5: async (req, res) => {
     try {
       connector.query(
-        `SELECT COUNT(breed_id) as count, breed_id FROM prediction 
+        `SELECT COUNT(breed_id) as count, breed_id FROM prediction WHERE breed_id IS NOT NULL
        GROUP BY breed_id ORDER BY count DESC LIMIT 5`,
         [],
         (err, result) => {
@@ -102,6 +102,7 @@ module.exports = {
               error: "Something went wrong while fetching the predictions",
             });
           }
+
           connector.query(
             `SELECT * FROM dogbreed WHERE breed_id IN (?)`,
             [result.map((item) => item.breed_id)],
@@ -198,7 +199,6 @@ module.exports = {
       });
     });
   },
-
   getHistory: async (req, res) => {
     const predictionId = req.params.id;
 
@@ -253,5 +253,30 @@ module.exports = {
         );
       }
     );
+  },
+  getHistoryByUserId: async (req, res) => {
+    const userId = req.params.id;
+
+    try {
+      connector.query(
+        `SELECT * FROM prediction WHERE user_id = ? ORDER BY createdAt DESC`,
+        [userId],
+        (err, result) => {
+          if (err) {
+            return res.send({ error: err.message });
+          }
+
+          if (result.length === 0) {
+            return res.send({ error: "No history found" });
+          }
+
+          return res.status(200).send({
+            data: result,
+          });
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
   },
 };
