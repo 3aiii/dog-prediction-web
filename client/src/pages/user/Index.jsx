@@ -47,7 +47,7 @@ const Index = () => {
           />
         </div>
       </div>
-      <div className="mt-10 max-w-6xl grid grid-cols-1 sm:grid-cols-3 gap-6">
+      <div className="max-w-6xl grid grid-cols-1 sm:grid-cols-3 gap-6">
         <div className="cursor-default bg-blue-50 p-6 rounded-2xl hover:shadow-lg transition transform hover:-translate-y-1 text-center">
           <div className="flex justify-center text-5xl mb-4 text-blue-600">
             <AiOutlineRadarChart />
